@@ -42,6 +42,7 @@ import org.researchstack.backbone.model.ConsentSignature;
 import org.researchstack.backbone.step.ConsentDocumentStep;
 import org.researchstack.backbone.step.ConsentSignatureStep;
 import org.researchstack.backbone.step.ConsentVisualStep;
+import org.researchstack.backbone.step.FormStep;
 import org.researchstack.backbone.step.InstructionStep;
 import org.researchstack.backbone.step.QuestionStep;
 import org.researchstack.backbone.step.Step;
@@ -232,11 +233,14 @@ public class MainActivity extends AppCompatActivity {
   private void displaySurvey()
   {
     List<Step> steps = new ArrayList<>();
+    List<QuestionStep> testSteps = new ArrayList<>();   //this is a new question steps array to test the form
 
     InstructionStep instructionStep = new InstructionStep("survey_instruction_step",
         "Personal information Questions",
         "In this module you will answer personal info questions, which shall be stored on the database and used according to the clauses specified in the consent module.");
     steps.add(instructionStep);
+
+    FormStep testForm = new FormStep("test", "test", "test");   //instantiation othe form in question
 
     AnswerFormat format = new TextAnswerFormat(20);
 
@@ -250,16 +254,49 @@ public class MainActivity extends AppCompatActivity {
     ageStep.setOptional(false);
     steps.add(ageStep);
 
-    AnswerFormat questionFormat = new ChoiceAnswerFormat(AnswerFormat.ChoiceAnswerStyle
+    QuestionStep weightStep = new QuestionStep("weight", "What is your weight?", format);
+    weightStep.setPlaceholder("Weight");
+    weightStep.setOptional(false);
+    testSteps.add(weightStep);    //to test form
+
+    QuestionStep heightStep = new QuestionStep("height", "What is your height?", format);
+    heightStep.setPlaceholder("Height");
+    heightStep.setOptional(false);
+    testSteps.add(heightStep);   //to test form
+
+    QuestionStep waistStep = new QuestionStep("waist", "What is your waist circumference?", format);
+    waistStep.setPlaceholder("Waist circum");
+    waistStep.setOptional(false);
+    steps.add(waistStep);
+
+    QuestionStep mobileStep = new QuestionStep("mobile", "What is your mobile number?", format);
+    mobileStep.setPlaceholder("num");
+    mobileStep.setOptional(false);
+    steps.add(mobileStep);
+
+    //start des multchoice
+    AnswerFormat genderFormat = new ChoiceAnswerFormat(AnswerFormat.ChoiceAnswerStyle
         .SingleChoice,
         new Choice<>("Female", 0),
         new Choice<>("Male", 1),
         new Choice<>("Prefer not to answer", 2));
 
-    QuestionStep questionStep = new QuestionStep("gender_step", "What is your gender?", questionFormat);
-    questionStep.setPlaceholder("Gender");
-    questionStep.setOptional(false);
-    steps.add(questionStep);
+    QuestionStep genderStep = new QuestionStep("marital_step", "What is your marital status?", genderFormat);
+    genderStep.setPlaceholder("Marital status");
+    genderStep.setOptional(false);
+    steps.add(genderStep);
+    //end des multchoice
+
+      AnswerFormat maritalFormat = new ChoiceAnswerFormat(AnswerFormat.ChoiceAnswerStyle
+              .SingleChoice,
+              new Choice<>("Single", 0),
+              new Choice<>("Married", 1),
+              new Choice<>("Divorced", 2));
+
+      QuestionStep maritalStep = new QuestionStep("gender_step", "What is your gender?", maritalFormat);
+      maritalStep.setPlaceholder("Gender");
+      maritalStep.setOptional(false);
+      steps.add(maritalStep);
 
     AnswerFormat colorAnswerFormat = new ImageChoiceAnswerFormat(AnswerFormat.ChoiceAnswerStyle
         .SingleChoice,
@@ -278,6 +315,9 @@ public class MainActivity extends AppCompatActivity {
         "Right. Off you go!",
         "That was easy!");
     steps.add(summaryStep);
+
+    testForm.setFormSteps(testSteps);      //adding the questions steps to the form
+  //  OrderedTask task = new OrderedTask("survey_task", testForm);    //setting test form to task
 
     OrderedTask task = new OrderedTask("survey_task", steps);
 
